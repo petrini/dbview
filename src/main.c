@@ -17,12 +17,13 @@ void print_usage(char *argv[])
 int main(int argc, char *argv[])
 {
   bool new_file = false;
+  bool list = false;
   char *filepath = NULL;
   char *add_string = NULL;
   int c = 0;
   int dbfd;
 
-  while((c = getopt(argc, argv, "nf:a:")) != -1)
+  while((c = getopt(argc, argv, "nf:a:l")) != -1)
   {
     switch (c)
     {
@@ -34,6 +35,9 @@ int main(int argc, char *argv[])
         break;
       case 'a':
         add_string = optarg;
+        break;
+      case 'l':
+        list = true;
         break;
       case '?':
         print_usage(argv);
@@ -107,8 +111,10 @@ int main(int argc, char *argv[])
     }
   }
 
-  //free(header);
-  //close_db_file(dbfd);
+  if(list)
+  {
+    list_employees(header, employees);
+  }
 
   if(output_file(dbfd, header, employees) == STATUS_ERROR)
   {

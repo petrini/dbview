@@ -10,11 +10,15 @@
 #include "common.h"
 #include "parse.h"
 
-/*
 void list_employees(struct dbheader_t *dbhdr, struct employee_t *employees) {
-
+  for(int i = 0; i < dbhdr->count; i++)
+  {
+    printf("Employee %d\n", i);
+    printf("\tName: %s\n", employees[i].name);
+    printf("\tAddress: %s\n", employees[i].address);
+    printf("\tHours: %d\n", employees[i].hours);
+  }
 }
-*/
 
 int add_employee(struct dbheader_t *dbhdr, struct employee_t **employeesOut, char *addstring) {
   if(employeesOut == NULL)
@@ -34,7 +38,6 @@ int add_employee(struct dbheader_t *dbhdr, struct employee_t **employeesOut, cha
     printf("Invalid addstring\n");
     return STATUS_ERROR;
   }
-	printf("%s\n", addstring);
 
 	char *name = strtok(addstring, ",");
   if(name == NULL)
@@ -54,7 +57,6 @@ int add_employee(struct dbheader_t *dbhdr, struct employee_t **employeesOut, cha
     printf("Invalid hours\n");
     return STATUS_ERROR;
   }
-  printf("%s %s %s\n", name, addr, hours);
 	
   dbhdr->count++;
   struct employee_t *employees = realloc(*employeesOut, sizeof(struct employee_t) * dbhdr->count);
@@ -69,6 +71,8 @@ int add_employee(struct dbheader_t *dbhdr, struct employee_t **employeesOut, cha
 	employees[dbhdr->count-1].hours = atoi(hours);
 
   *employeesOut = employees;
+
+  printf("Added Employee %d: %s\n", dbhdr->count - 1, name);
 
 	return STATUS_SUCCESS;
 }
@@ -124,7 +128,6 @@ int output_file(int fd, struct dbheader_t *dbhdr, struct employee_t *employees) 
 
 	for (int i = 0; i < realcount; i++) {
 		employees[i].hours = htonl(employees[i].hours);
-    printf("%s\n", employees[i].name);
 		write(fd, &employees[i], sizeof(struct employee_t));
 	}
 
