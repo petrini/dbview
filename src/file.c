@@ -41,3 +41,14 @@ int open_db_file(char *filename)
   return fd;
 }
 
+int close_db_file(int fd)
+{
+  int fd_r = close(fd);
+  if(fd_r == STATUS_ERROR)
+  {
+    perror("close");
+    return STATUS_ERROR;
+  }
+
+  return fd_r;
+}

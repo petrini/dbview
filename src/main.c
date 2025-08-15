@@ -47,27 +47,50 @@ int main(int argc, char *argv[])
     return -1;
   }
 
+  struct dbheader_t *header = NULL;
   if(new_file)
   {
     dbfd = create_db_file(filepath);
-    if(dbfd == -1)
+    if(dbfd == STATUS_ERROR)
     {
       printf("Unable to create database\n");
-      return -1;
+      return STATUS_ERROR;
+    }
+
+    int dbheader_create = create_db_header(dbfd, &header);
+    if(dbheader_create == STATUS_ERROR)
+    {
+      printf("Unable to create database header\n");
+      close_db_file(dbfd);
+      return STATUS_ERROR;
     }
   }
   else
   {
     dbfd = open_db_file(filepath);
-    if(dbfd == -1)
+    if(dbfd == STATUS_ERROR)
     {
       printf("Unable to open database\n");
-      return -1;
+      return STATUS_ERROR;
+    }
+
+    int dbheader_validate = validate_db_header(dbfd, &header);
+    if(dbheader_validate == STATUS_ERROR)
+    {
+      printf("Unable to validate database header\n");
+      close_db_file(dbfd);
+      return STATUS_ERROR;
     }
   }
 
-  printf("new_file: %d\n", new_file);
-  printf("filepath: %s\n", filepath);
+  struct employee_t *employee = NULL;
+  int output = output_file(dbfd, header, employee);
+  if(output == STATUS_ERROR)
+  {
+    printf("Could not output file\n");
+    close_db_file(dbfd);
+    return STATUS_ERROR;
+  }
 
-  return 0;
+  return STATUS_SUCCESS;
 }
