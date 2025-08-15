@@ -98,16 +98,7 @@ int main(int argc, char *argv[])
 
   if(add_string != NULL)
   {
-    header->count++;
-    employees = realloc(employees, sizeof(struct employee_t) * header->count);
-    if(employees == NULL)
-    {
-      printf("Error realoccing database in memory\n");
-      close_db_file(dbfd);
-      free(header);
-      return STATUS_ERROR;
-    }
-    if(add_employee(header, employees, add_string) == STATUS_ERROR)
+    if(add_employee(header, &employees, add_string) == STATUS_ERROR)
     {
       printf("Error adding employee: %s\n", add_string);
       close_db_file(dbfd);

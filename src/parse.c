@@ -16,16 +16,16 @@ void list_employees(struct dbheader_t *dbhdr, struct employee_t *employees) {
 }
 */
 
-int add_employee(struct dbheader_t *dbhdr, struct employee_t *employees, char *addstring) {
-  if(dbhdr == NULL)
+int add_employee(struct dbheader_t *dbhdr, struct employee_t **employeesOut, char *addstring) {
+  if(employeesOut == NULL)
   {
-    printf("Invalid header\n");
+    printf("Invalid employeesOutPointer\n");
     return STATUS_ERROR;
   }
 
-  if(employees == NULL)
+  if(dbhdr == NULL)
   {
-    printf("Invalid employees pointer\n");
+    printf("Invalid header\n");
     return STATUS_ERROR;
   }
 
@@ -56,10 +56,19 @@ int add_employee(struct dbheader_t *dbhdr, struct employee_t *employees, char *a
   }
   printf("%s %s %s\n", name, addr, hours);
 	
+  dbhdr->count++;
+  struct employee_t *employees = realloc(*employeesOut, sizeof(struct employee_t) * dbhdr->count);
+  if(employees == NULL)
+  {
+    printf("Error realoccing database in memory\n");
+    return STATUS_ERROR;
+  }
 	strncpy(employees[dbhdr->count-1].name, name, sizeof(employees[dbhdr->count-1].name));
 	strncpy(employees[dbhdr->count-1].address, addr, sizeof(employees[dbhdr->count-1].address));
 
 	employees[dbhdr->count-1].hours = atoi(hours);
+
+  *employeesOut = employees;
 
 	return STATUS_SUCCESS;
 }
