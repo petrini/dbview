@@ -9,6 +9,8 @@ run: clean default
 	./$(TARGET) -f ./mynewdb.db -a "TheRusty,Olazabal 673, 500"
 	./$(TARGET) -f ./mynewdb.db -a "Oxi,Las Heras 543, 250"
 	./$(TARGET) -f ./mynewdb.db -l
+	./$(TARGET) -f ./mynewdb.db -h "Oxi,300"
+	./$(TARGET) -f ./mynewdb.db -l
 
 default: $(TARGET)
 

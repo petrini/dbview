@@ -10,8 +10,56 @@
 #include "common.h"
 #include "parse.h"
 
-void list_employees(struct dbheader_t *dbhdr, struct employee_t *employees) {
+int remove_employee(struct dbheader_t *dbhdr, struct employee_t **employeesOut, char *remove_string)
+{
+  if(dbhdr == NULL)
+  {
+    printf("Invalid header\n");
+    return STATUS_ERROR;
+  }
 
+  printf("%ld\n", (long int)dbhdr);
+  printf("%ld\n", (long int)employeesOut);
+  printf("%s\n", remove_string);
+  printf("Not implemented yet\n");
+  return STATUS_ERROR;
+}
+
+int change_employee_hours(struct dbheader_t *dbhdr, struct employee_t *employees, char *hours_string)
+{
+  if(dbhdr == NULL)
+  {
+    printf("Invalid header\n");
+    return STATUS_ERROR;
+  }
+
+	char *name = strtok(hours_string, ",");
+  if(name == NULL)
+  {
+    printf("Invalid name\n");
+    return STATUS_ERROR;
+  }
+  char *hours = strtok(NULL, ",");
+  if(hours == NULL)
+  {
+    printf("Invalid hours\n");
+    return STATUS_ERROR;
+  }
+  for(int i = 0; i < dbhdr->count; i++)
+  {
+    if(strcmp(employees[i].name, name) == 0)
+    {
+      printf("Changing employee %s hours from %d to %s\n", name, employees[i].hours, hours);
+      employees[i].hours = atoi(hours);
+      return STATUS_SUCCESS;
+    }
+  }
+
+  printf("Employee not found: %s\n", name);
+  return STATUS_ERROR;
+}
+
+void list_employees(struct dbheader_t *dbhdr, struct employee_t *employees) {
   if(dbhdr == NULL)
   {
     printf("Invalid header\n");
