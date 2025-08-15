@@ -18,10 +18,11 @@ int main(int argc, char *argv[])
 {
   bool new_file = false;
   char *filepath = NULL;
+  char *add_string = NULL;
   int c = 0;
   int dbfd;
 
-  while((c = getopt(argc, argv, "nf:")) != -1)
+  while((c = getopt(argc, argv, "nf:a:")) != -1)
   {
     switch (c)
     {
@@ -30,6 +31,9 @@ int main(int argc, char *argv[])
         break;
       case 'f':
         filepath = optarg;
+        break;
+      case 'a':
+        add_string = optarg;
         break;
       case '?':
         print_usage(argv);
@@ -83,15 +87,45 @@ int main(int argc, char *argv[])
     }
   }
 
-  struct employee_t *employee = NULL;
-  int output = output_file(dbfd, header, employee);
+  struct employee_t *employees = NULL;
+  int read_employees_r = read_employees(dbfd, header, &employees);
+  if(read_employees_r == STATUS_ERROR)
+  {
+    printf("Error reading employees\n");
+    close_db_file(dbfd);
+    free(header);
+    return STATUS_ERROR;
+  }
 
-  free(header);
+  if(add_string != NULL)
+  {
+    header->count++;
+    employees = realloc(employees, sizeof(struct employee_t) * header->count);
+    if(employees == NULL)
+    {
+      printf("Error realoccing database in memory\n");
+      close_db_file(dbfd);
+      free(header);
+      return STATUS_ERROR;
+    }
+    int add_employee_r = add_employee(header, employees, add_string);
+    if(add_employee_r == STATUS_ERROR)
+    {
+      printf("Error adding employee: %s\n", add_string);
+      close_db_file(dbfd);
+      free(header);
+      return STATUS_ERROR;
+    }
+  }
+
+  int output = output_file(dbfd, header, employees);
+
+  //free(header);
+  //close_db_file(dbfd);
 
   if(output == STATUS_ERROR)
   {
     printf("Could not output file\n");
-    close_db_file(dbfd);
     return STATUS_ERROR;
   }
 
