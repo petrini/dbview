@@ -88,8 +88,7 @@ int main(int argc, char *argv[])
   }
 
   struct employee_t *employees = NULL;
-  int read_employees_r = read_employees(dbfd, header, &employees);
-  if(read_employees_r == STATUS_ERROR)
+  if(read_employees(dbfd, header, &employees) == STATUS_ERROR)
   {
     printf("Error reading employees\n");
     close_db_file(dbfd);
@@ -108,8 +107,7 @@ int main(int argc, char *argv[])
       free(header);
       return STATUS_ERROR;
     }
-    int add_employee_r = add_employee(header, employees, add_string);
-    if(add_employee_r == STATUS_ERROR)
+    if(add_employee(header, employees, add_string) == STATUS_ERROR)
     {
       printf("Error adding employee: %s\n", add_string);
       close_db_file(dbfd);
@@ -118,12 +116,10 @@ int main(int argc, char *argv[])
     }
   }
 
-  int output = output_file(dbfd, header, employees);
-
   //free(header);
   //close_db_file(dbfd);
 
-  if(output == STATUS_ERROR)
+  if(output_file(dbfd, header, employees) == STATUS_ERROR)
   {
     printf("Could not output file\n");
     return STATUS_ERROR;
