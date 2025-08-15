@@ -11,6 +11,8 @@ run: clean default
 	./$(TARGET) -f ./mynewdb.db -l
 	./$(TARGET) -f ./mynewdb.db -h "Oxi,300"
 	./$(TARGET) -f ./mynewdb.db -l
+	./$(TARGET) -f ./mynewdb.db -r "TheRusty"
+	./$(TARGET) -f ./mynewdb.db -l
 
 default: $(TARGET)
 

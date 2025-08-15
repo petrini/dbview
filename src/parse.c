@@ -18,11 +18,58 @@ int remove_employee(struct dbheader_t *dbhdr, struct employee_t **employeesOut, 
     return STATUS_ERROR;
   }
 
-  printf("%ld\n", (long int)dbhdr);
-  printf("%ld\n", (long int)employeesOut);
-  printf("%s\n", remove_string);
-  printf("Not implemented yet\n");
-  return STATUS_ERROR;
+  if(employeesOut == NULL)
+  {
+    printf("Invalid employeesOutPointer\n");
+    return STATUS_ERROR;
+  }
+
+  if(remove_string == NULL)
+  {
+    printf("Invalid remove_string\n");
+    return STATUS_ERROR;
+  }
+
+  dbhdr->count--;
+  struct employee_t *old_employees = *employeesOut;
+  struct employee_t *employees = realloc(*employeesOut, sizeof(struct employee_t) * dbhdr->count);
+  if(employees == NULL)
+  {
+    printf("Error realoccing database in memory\n");
+    return STATUS_ERROR;
+  }
+
+  bool found = false;
+  for(int i = 0; i < dbhdr->count + 1; i++)
+  {
+    if(strcmp(old_employees[i].name, remove_string) != 0)
+    {
+      int target_index = found ? i - 1 : i;
+      strncpy(employees[target_index].name, old_employees[i].name, sizeof(old_employees[i].name));
+      strncpy(employees[target_index].address, old_employees[i].address, sizeof(old_employees[i].address));
+      employees[target_index].hours = old_employees[i].hours;
+    }
+    else
+    {
+      if(found)
+      {
+        printf("Duplicated employee %s found\n", remove_string);
+        return STATUS_ERROR;
+      }
+
+      found = true;
+    }
+  }
+
+  if(!found)
+  {
+    printf("Employee %s not found\n", remove_string);
+    return STATUS_ERROR;
+  }
+
+  *employeesOut = employees;
+  printf("Removed Employee %s\n", remove_string);
+	return STATUS_SUCCESS;
 }
 
 int change_employee_hours(struct dbheader_t *dbhdr, struct employee_t *employees, char *hours_string)
@@ -185,6 +232,8 @@ int output_file(int fd, struct dbheader_t *dbhdr, struct employee_t *employees) 
 		employees[i].hours = htonl(employees[i].hours);
 		write(fd, &employees[i], sizeof(struct employee_t));
 	}
+
+  ftruncate(fd, sizeof(struct dbheader_t) + sizeof(struct employee_t) * realcount);
 
 	return STATUS_SUCCESS;
 }
