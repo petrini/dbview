@@ -18,11 +18,14 @@ void list_employees(struct dbheader_t *dbhdr, struct employee_t *employees) {
 int add_employee(struct dbheader_t *dbhdr, struct employee_t *employees, char *addstring) {
 
 }
-
-int read_employees(int fd, struct dbheader_t *dbhdr, struct employee_t **employeesOut) {
-
-}
 */
+int read_employees(int fd, struct dbheader_t *dbhdr, struct employee_t **employeesOut) {
+  printf("%d\n", fd);
+  printf("%ld\n", (long)dbhdr);
+  printf("%ld\n", (long)employeesOut);
+  return STATUS_SUCCESS;
+}
+
 
 int output_file(int fd, struct dbheader_t *dbhdr, struct employee_t *employees) {
 	if (fd < 0) {
