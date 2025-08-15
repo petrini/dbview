@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     if(dbheader_create == STATUS_ERROR)
     {
       printf("Unable to create database header\n");
-      //close_db_file(dbfd);
+      close_db_file(dbfd);
       return STATUS_ERROR;
     }
   }
@@ -85,6 +85,9 @@ int main(int argc, char *argv[])
 
   struct employee_t *employee = NULL;
   int output = output_file(dbfd, header, employee);
+
+  free(header);
+
   if(output == STATUS_ERROR)
   {
     printf("Could not output file\n");
