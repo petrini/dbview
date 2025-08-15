@@ -17,12 +17,44 @@ void list_employees(struct dbheader_t *dbhdr, struct employee_t *employees) {
 */
 
 int add_employee(struct dbheader_t *dbhdr, struct employee_t *employees, char *addstring) {
+  if(dbhdr == NULL)
+  {
+    printf("Invalid header\n");
+    return STATUS_ERROR;
+  }
+
+  if(employees == NULL)
+  {
+    printf("Invalid employees pointer\n");
+    return STATUS_ERROR;
+  }
+
+  if(addstring == NULL)
+  {
+    printf("Invalid addstring\n");
+    return STATUS_ERROR;
+  }
 	printf("%s\n", addstring);
 
 	char *name = strtok(addstring, ",");
+  if(name == NULL)
+  {
+    printf("Invalid name\n");
+    return STATUS_ERROR;
+  }
 	char *addr = strtok(NULL, ",");
+  if(addr == NULL)
+  {
+    printf("Invalid address\n");
+    return STATUS_ERROR;
+  }
 	char *hours = strtok(NULL, ",");
-	printf("%s %s %s\n", name, addr, hours);
+  if(hours == NULL)
+  {
+    printf("Invalid hours\n");
+    return STATUS_ERROR;
+  }
+  printf("%s %s %s\n", name, addr, hours);
 	
 	strncpy(employees[dbhdr->count-1].name, name, sizeof(employees[dbhdr->count-1].name));
 	strncpy(employees[dbhdr->count-1].address, addr, sizeof(employees[dbhdr->count-1].address));
