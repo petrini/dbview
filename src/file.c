@@ -12,7 +12,7 @@
 int create_db_file(char *filename)
 {
   int fd = open(filename, O_RDONLY);
-  if(fd != -1)
+  if(fd != STATUS_ERROR)
   {
     close(fd);
     printf("File already exists\n");
@@ -20,7 +20,7 @@ int create_db_file(char *filename)
   }
 
   fd = open(filename, O_RDWR | O_CREAT, 0644);
-  if(fd == -1)
+  if(fd == STATUS_ERROR)
   {
     perror("open");
     return STATUS_ERROR;

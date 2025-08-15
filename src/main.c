@@ -33,9 +33,9 @@ int main(int argc, char *argv[])
         break;
       case '?':
         print_usage(argv);
-        return -1;
+        return STATUS_ERROR;
       default:
-        return -1;
+        return STATUS_ERROR;
     }
   }
 
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     printf("Filepath is a required argument\n");
     print_usage(argv);
 
-    return -1;
+    return STATUS_ERROR;
   }
 
   struct dbheader_t *header = NULL;
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     if(dbheader_create == STATUS_ERROR)
     {
       printf("Unable to create database header\n");
-      close_db_file(dbfd);
+      //close_db_file(dbfd);
       return STATUS_ERROR;
     }
   }
